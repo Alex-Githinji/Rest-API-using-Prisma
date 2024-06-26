@@ -15,4 +15,36 @@ const createproducts = async () => {
     })
     console.log(products)
 }
+
+const createproduct= async () => {
+    const products = await prisma.products.createMany({
+        data: [
+            {
+                productTitle : "cassino",
+                productThumbnail : "http://image.com/240x100.png/cc0000/fff0",
+                productDescription : "sapien arcu sed augue aliquam erat volutpat",
+                productCost : 123,
+                onOffer : true
+                },
+                {
+                    productTitle : "Flavor-cassino",
+                    productThumbnail : "http://image.com/240x100.png/cc0000/fff0",
+                    productDescription : "sapien arcu sed augue aliquam erat volutpat",
+                    productCost :70,
+                    onOffer : false
+                    },
+                    {
+                        productTitle : "wallpaper-dell",
+                        productThumbnail : "http://image.com/240x100.png/cc0000/fff0",
+                        productDescription : "sapien arcu sed augue aliquam erat volutpat",
+                        productCost : 90,
+                        onOffer : true
+                        }
+                    ]
+                    })
+
+
+                    
+}
 createproducts();
+createproduct();
