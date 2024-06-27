@@ -9,8 +9,8 @@ const router = Router();
 
 router.get("/", async (req,res) => {
     try {
-        const users = await prisma.user.findMany();
-        res.status(200).json(product);
+        const users = await prisma.products.findMany();
+        res.status(200).json(users);
     } catch (e) {
         res.status(500).json({success: false ,message: e.message});
 
@@ -19,8 +19,17 @@ router.get("/", async (req,res) => {
 })
 
 
-router.get("/:id", (req,res) => {
-    res.send("get a single product")
+router.get("/:id", async (req,res) => {
+    const id= req.params.id
+    try {
+        const product = await prisma.products.findFirst({where: {id: id}});
+        res.status(200).json(product);
+       
+    }  catch (e) {
+        res.status(500).json({success: false ,message: e.message});
+        }
+        
+    
 })
 
 
@@ -45,12 +54,60 @@ router.post("/", async (req,res) => {
     
 })
 
-router.get("/:id", (req,res) => {
-    res.send("updating products")
+router.patch("/:id", (req,res) => {
+    const { productThumbnail, productTitle, productDescription , productCost, onOffer} = req.body;
+    const id = req.params.id;
+    try {
+        let updateproduct
+        if (productThumbnail) {
+            updateproduct = {productThumbnail: productThumbnail}
+            }
+            if (productTitle) {
+                updateproduct = {...updateproduct, productTitle: productTitle}
+                }
+                if (productDescription) {
+                    updateproduct = {...updateproduct, productDescription: productDescription}
+                    }
+                    if (productCost) {
+                        updateproduct = {...updateproduct, productCost: productCost}
+                        }
+                        if (onOffer) {
+                            updateproduct = {...updateproduct, onOffer: onOffer}
+                            }
+                            const product = prisma.products.update({
+                                where: {id: id},
+                                data: updateproduct
+                                })
+                                res.status(200).json(product)
+                                } catch (e) {
+                                    res.status(500).json({success : false, message: e.message})
+                                    }
+                                    
+
+                    
 })
 
-router.get("/:id", (req,res) => {
-    res.send("delete a product")
+router.delete("/:id",  async (req,res) => {
+    const id = req.params.id.trim();
+    try {
+        const deleteproduct = await prisma.products.delete({where: {id: id},
+            select: {
+                id: true,
+                productThumbnail: true,
+                productTitle: true,
+                productDescription: true,
+                productCost: true,
+                onOffer: true,
+                
+            }
+        });
+        res.status(200).json(deleteproduct);
+
+    }
+    catch (e) {
+        res.status(500).json({success: false ,message: e.message});
+        }
+   
 })
 
 
